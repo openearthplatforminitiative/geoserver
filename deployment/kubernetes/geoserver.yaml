@@ -22,7 +22,7 @@ spec:
             - name: GEOSERVER_DATA_DIR
               value: "/opt/geoserver_data/geoserver"
             - name: INSTALL_EXTENSIONS
-              value: true
+              value: "true"
             - name: STABLE_EXTENSIONS
               value: "pyramid"
 
