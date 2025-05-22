@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: dagster
     server: https://kubernetes.default.svc
-  project: geoserver
+  project: dagster
   source:
     path: deployment/kubernetes/
     repoURL: https://github.com/openearthplatforminitiative/geoserver
