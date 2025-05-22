@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: geoserver
+  namespace: dagster
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: dagster
+    server: https://kubernetes.default.svc
+  project: geoserver
+  source:
+    path: deployment/kubernetes/
+    repoURL: https://github.com/openearthplatforminitiative/geoserver
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true

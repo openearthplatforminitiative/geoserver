@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geoserver
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: geoserver
+  template:
+    metadata:
+      labels:
+        app: geoserver
+    spec:
+      containers:
+        - image: docker.osgeo.org/geoserver:2.28.x
+          name: geoserver
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GEOSERVER_DATA_DIR
+              value: "/opt/geoserver_data/geoserver"
+            - name: INSTALL_EXTENSIONS
+              value: true
+            - name: STABLE_EXTENSIONS
+              value: "pyramid"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: geoserver
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: geoserver
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: stripprefix-geoserver
+spec:
+  stripPrefix:
+    prefixes:
+      - /geoserver
+    forceSlash: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: geoserver
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/geoserver`) && HeadersRegexp(`Authorization`, `.+`)
+      services:
+        - kind: Service
+          name: geoserver
+          port: 80
+      middlewares:
+        - name: stripprefix-geoserver
+        - name: traefikmiddleware-cors@kubernetescrd
+        - name: traefikmiddleware-jwt@kubernetescrd
+        - name: traefikmiddleware-rate-limit-registered@kubernetescrd
+    - kind: Rule
+      match: PathPrefix(`/geoserver`) && !HeadersRegexp(`Authorization`, `.+`)
+      services:
+        - kind: Service
+          name: geoserver
+          port: 80
+      middlewares:
+        - name: stripprefix-geoserver
+        - name: traefikmiddleware-cors@kubernetescrd
+        - name: traefikmiddleware-rate-limit-anonymous@kubernetescrd
