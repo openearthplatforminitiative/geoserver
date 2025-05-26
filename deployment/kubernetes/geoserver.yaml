@@ -25,6 +25,8 @@ spec:
               value: "true"
             - name: STABLE_EXTENSIONS
               value: "pyramid"
+            - name: GEOSERVER_CSRF_WHITELIST
+              value: "openepi.io"
 
 ---
 apiVersion: v1
