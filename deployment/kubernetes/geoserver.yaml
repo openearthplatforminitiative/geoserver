@@ -27,6 +27,13 @@ spec:
               value: "pyramid"
             - name: GEOSERVER_CSRF_WHITELIST
               value: "openepi.io"
+          volumeMounts:
+            - name: dagster-storage
+              mountPath: /opt/geoserver_data/geoserver
+      volumes:
+        - name: dagster-storage
+          persistentVolumeClaim:
+            claimName: dagster-storage-pvc
 
 ---
 apiVersion: v1
