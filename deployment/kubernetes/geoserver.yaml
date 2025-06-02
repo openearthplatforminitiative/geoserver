@@ -29,7 +29,7 @@ spec:
               value: "openepi.io"
           volumeMounts:
             - name: dagster-storage
-              mountPath: /opt/geoserver_data/geoserver
+              mountPath: /opt/geoserver_data/
       volumes:
         - name: dagster-storage
           persistentVolumeClaim:
