@@ -28,12 +28,12 @@ spec:
             - name: GEOSERVER_CSRF_WHITELIST
               value: "openepi.io"
           volumeMounts:
-            - name: dagster-storage
+            - name: dagster-result-storage
               mountPath: /opt/geoserver_data/
       volumes:
-        - name: dagster-storage
+        - name: dagster-result-storage
           persistentVolumeClaim:
-            claimName: dagster-storage-pvc
+            claimName: dagster-result-storage-pvc
 
 ---
 apiVersion: v1
